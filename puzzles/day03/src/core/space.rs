@@ -9,13 +9,6 @@ pub enum Space {
 }
 
 impl Space {
-    pub fn is_empty(&self) -> bool {
-        match self {
-            Self::Empty => true,
-            _ => false,
-        }
-    }
-
     pub fn digit(&self) -> Option<&Digit> {
         match self {
             Self::Digit(digit) => Some(digit),

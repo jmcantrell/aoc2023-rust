@@ -1,19 +1,21 @@
 use std::collections::HashMap;
 
+use crate::core::Value;
+
 use super::{Parsed1, Parsed2};
 
-type Solution = u32;
+type Solution = Value;
 pub type Solution1 = Solution;
 pub type Solution2 = Solution;
 
-fn calibration_value(mut digits: impl Iterator<Item = u32>) -> u32 {
+fn calibration_value(mut digits: impl Iterator<Item = Value>) -> Value {
     let first = digits.next().unwrap();
     let last = digits.last().unwrap_or(first);
 
     first * 10 + last
 }
 
-fn solve(lines_of_digits: impl Iterator<Item = impl Iterator<Item = u32>>) -> Solution {
+fn solve(lines_of_digits: impl Iterator<Item = impl Iterator<Item = Value>>) -> Solution {
     lines_of_digits.map(calibration_value).sum()
 }
 

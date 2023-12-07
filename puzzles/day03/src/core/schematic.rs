@@ -156,3 +156,42 @@ impl TryFrom<&str> for Schematic {
         Ok(Self(inner))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    const INPUT: &str = include_str!("../../input-test.txt");
+
+    #[test]
+    fn part_numbers() {
+        macro_rules! test {
+            ($input:expr, $expected:expr) => {
+                assert_eq!(
+                    super::Schematic::try_from(INPUT)
+                        .unwrap()
+                        .part_numbers()
+                        .collect::<Vec<_>>(),
+                    Vec::from($expected)
+                );
+            };
+        }
+
+        test!(INPUT, [35, 467, 633, 617, 592, 664, 598, 755]);
+    }
+
+    #[test]
+    fn gear_ratios() {
+        macro_rules! test {
+            ($input:expr, $expected:expr) => {
+                assert_eq!(
+                    super::Schematic::try_from(INPUT)
+                        .unwrap()
+                        .gear_ratios()
+                        .collect::<Vec<_>>(),
+                    Vec::from($expected)
+                );
+            };
+        }
+
+        test!(INPUT, [16345, 451490]);
+    }
+}
