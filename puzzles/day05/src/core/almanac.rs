@@ -13,7 +13,7 @@ pub struct Almanac {
 impl TryFrom<&str> for Almanac {
     type Error = anyhow::Error;
 
-    fn try_from(s: &str) -> anyhow::Result<Self> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         let mut chunks = s.split("\n\n");
 
         let seeds = chunks

@@ -34,7 +34,7 @@ impl From<Inner> for Map {
 impl TryFrom<&str> for Map {
     type Error = anyhow::Error;
 
-    fn try_from(s: &str) -> anyhow::Result<Self> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         Ok(s.lines()
             .skip(1)
             .enumerate()

@@ -40,7 +40,7 @@ impl Range {
 impl TryFrom<&str> for Range {
     type Error = anyhow::Error;
 
-    fn try_from(s: &str) -> anyhow::Result<Self> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         let mut tokens = s.split_whitespace();
 
         let destination_start: usize = tokens

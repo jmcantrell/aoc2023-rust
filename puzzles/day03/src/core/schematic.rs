@@ -133,7 +133,7 @@ impl Schematic {
 impl TryFrom<&str> for Schematic {
     type Error = anyhow::Error;
 
-    fn try_from(s: &str) -> anyhow::Result<Self> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         let mut lines = s.lines().enumerate().peekable();
 
         let width = lines

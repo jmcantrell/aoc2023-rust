@@ -34,7 +34,7 @@ impl Card {
 impl TryFrom<&str> for Card {
     type Error = anyhow::Error;
 
-    fn try_from(s: &str) -> anyhow::Result<Self> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         static RE: Lazy<Regex> = lazy_regex!(
             r"^Card\s+(?<identifier>\d+):(?<winning_numbers>.*)\|(?<numbers_you_have>.*)$"
         );
