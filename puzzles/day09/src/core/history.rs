@@ -29,21 +29,18 @@ fn differences(values: Vec<Value>) -> impl Iterator<Item = Vec<Value>> {
 fn extrapolate(values: Vec<Value>) -> impl Iterator<Item = Value> {
     let mut current = values.last().cloned().unwrap();
 
-    let mut differences: Vec<_> = differences(values).collect();
-    differences.reverse();
+    let mut latest_values: Vec<_> = differences(values)
+        .map(|mut values| values.pop().unwrap())
+        .collect();
+
+    latest_values.reverse();
 
     std::iter::from_fn(move || {
-        for i in 0..differences.len() - 1 {
-            let a = differences[i].last().cloned().unwrap();
-            let b = differences[i + 1].last().cloned().unwrap();
-            differences[i + 1].push(a + b);
+        for i in 0..latest_values.len() - 1 {
+            latest_values[i + 1] += latest_values[i];
         }
 
-        current += differences
-            .last()
-            .and_then(|last| last.last())
-            .cloned()
-            .unwrap();
+        current += latest_values.last().cloned().unwrap();
 
         Some(current)
     })
