@@ -159,14 +159,16 @@ impl TryFrom<&str> for Schematic {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     const INPUT: &str = include_str!("../../input-test.txt");
 
     #[test]
-    fn part_numbers() {
+    fn test_part_numbers() {
         macro_rules! test {
             ($input:expr, $expected:expr) => {
                 assert_eq!(
-                    super::Schematic::try_from(INPUT)
+                    Schematic::try_from(INPUT)
                         .unwrap()
                         .part_numbers()
                         .collect::<Vec<_>>(),
@@ -179,7 +181,7 @@ mod tests {
     }
 
     #[test]
-    fn gear_ratios() {
+    fn test_gear_ratios() {
         macro_rules! test {
             ($input:expr, $expected:expr) => {
                 assert_eq!(

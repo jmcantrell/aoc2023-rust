@@ -74,7 +74,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn translate() {
+    fn test_translate() {
         let range = Range {
             destination_start: 50,
             source_start: 98,

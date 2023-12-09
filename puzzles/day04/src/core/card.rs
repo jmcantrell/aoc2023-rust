@@ -75,16 +75,18 @@ impl TryFrom<&str> for Card {
 mod tests {
     use std::collections::HashSet;
 
+    use super::*;
+
     const INPUT: &str = include_str!("../../input-test.txt");
 
     #[test]
-    fn matching_numbers() {
+    fn test_matching_numbers() {
         macro_rules! test {
             ($expected:expr) => {
                 assert_eq!(
                     INPUT
                         .lines()
-                        .map(|s| super::Card::try_from(s)
+                        .map(|s| Card::try_from(s)
                             .unwrap()
                             .matching_numbers()
                             .collect::<HashSet<_>>())
@@ -108,7 +110,7 @@ mod tests {
     }
 
     #[test]
-    fn score() {
+    fn test_score() {
         macro_rules! test {
             ($expected:expr) => {
                 assert_eq!(
