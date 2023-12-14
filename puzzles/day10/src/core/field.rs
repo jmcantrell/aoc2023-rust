@@ -44,12 +44,12 @@ impl TryFrom<&str> for Field {
     type Error = anyhow::Error;
 
     fn try_from(input: &str) -> Result<Self, Self::Error> {
-        let width = input.lines().next().context("empty input")?.len();
+        let lines: Vec<_> = input.lines().enumerate().collect();
 
-        let mut start: Option<Location> = None;
-        let mut values: Vec<Tile> = Vec::new();
+        let height = lines.len();
+        let width = lines.first().context("empty input")?.1.len();
 
-        for (i, line) in input.lines().enumerate() {
+        for (i, line) in lines.iter().skip(1) {
             ensure!(
                 line.len() == width,
                 "expected row number {} to have {} tiles, but it had {}",
@@ -57,19 +57,22 @@ impl TryFrom<&str> for Field {
                 width,
                 line.len()
             );
+        }
 
+        let mut start: Option<Location> = None;
+        let mut values = Vec::with_capacity(height * width);
+
+        for (i, line) in lines {
             for (j, c) in line.chars().enumerate() {
                 values.push(if c == 'S' {
                     start = Some((i, j));
                     Tile::Empty // Wait until other tiles are in place.
                 } else {
-                    c.try_into()
+                    Tile::try_from(c)
                         .with_context(|| format!("row number {}, column number {}", i + 1, j + 1))?
                 })
             }
         }
-
-        let height = values.len() / width;
 
         let mut grid = Grid::from_iter(height, width, values);
 
