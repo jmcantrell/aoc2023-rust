@@ -52,7 +52,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_translate() {
+    fn test_source_to_destination() {
         let map = Map(vec![
             Range {
                 destination_start: 50,

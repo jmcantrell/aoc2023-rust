@@ -82,9 +82,9 @@ mod tests {
     #[test]
     fn test_matching_numbers() {
         macro_rules! test {
-            ($expected:expr) => {
+            ($input:expr, $expected:expr) => {
                 assert_eq!(
-                    INPUT
+                    $input
                         .lines()
                         .map(|s| Card::try_from(s)
                             .unwrap()
@@ -99,30 +99,33 @@ mod tests {
             };
         }
 
-        test!([
-            vec![48, 83, 17, 86],
-            vec![32, 61],
-            vec![1, 21],
-            vec![84],
-            vec![],
-            vec![],
-        ]);
+        test!(
+            INPUT,
+            [
+                vec![48, 83, 17, 86],
+                vec![32, 61],
+                vec![1, 21],
+                vec![84],
+                vec![],
+                vec![],
+            ]
+        );
     }
 
     #[test]
     fn test_score() {
         macro_rules! test {
-            ($expected:expr) => {
+            ($input:expr, $expected:expr) => {
                 assert_eq!(
-                    INPUT
+                    $input
                         .lines()
-                        .map(|s| super::Card::try_from(s).unwrap().score())
+                        .map(|s| Card::try_from(s).unwrap().score())
                         .collect::<Vec<_>>(),
                     $expected.into_iter().collect::<Vec<_>>()
                 );
             };
         }
 
-        test!([8, 2, 2, 1, 0, 0]);
+        test!(INPUT, [8, 2, 2, 1, 0, 0]);
     }
 }

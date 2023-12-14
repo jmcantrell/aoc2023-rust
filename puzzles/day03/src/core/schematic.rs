@@ -168,7 +168,7 @@ mod tests {
         macro_rules! test {
             ($input:expr, $expected:expr) => {
                 assert_eq!(
-                    Schematic::try_from(INPUT)
+                    Schematic::try_from($input)
                         .unwrap()
                         .part_numbers()
                         .collect::<Vec<_>>(),
@@ -185,7 +185,7 @@ mod tests {
         macro_rules! test {
             ($input:expr, $expected:expr) => {
                 assert_eq!(
-                    super::Schematic::try_from(INPUT)
+                    Schematic::try_from($input)
                         .unwrap()
                         .gear_ratios()
                         .collect::<Vec<_>>(),
