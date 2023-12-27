@@ -1,8 +1,11 @@
 use anyhow::{ensure, Context};
 
 use std::collections::{HashSet, VecDeque};
+use std::iter::repeat;
 
 use super::{Direction, Location, Offset, Tile};
+
+use Direction::*;
 
 type Inner = nalgebra::DMatrix<Tile>;
 
@@ -24,8 +27,14 @@ impl Contraption {
             .and_then(|adjacent| self.contains(adjacent).then_some(adjacent))
     }
 
-    pub fn size(&self) -> (usize, usize) {
-        self.0.shape()
+    pub fn edge_locations(&self) -> [(Direction, Vec<Location>); 4] {
+        let (height, width) = self.0.shape();
+        [
+            (North, repeat(0).zip(0..width).collect()),
+            (East, (0..height).zip(repeat(width - 1)).collect()),
+            (South, repeat(height - 1).zip(0..width).collect()),
+            (West, (0..height).zip(repeat(0)).collect()),
+        ]
     }
 
     pub fn count_energized(&self, start: Location, enter_from: Direction) -> usize {

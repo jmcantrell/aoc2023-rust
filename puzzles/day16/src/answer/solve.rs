@@ -1,8 +1,6 @@
 use anyhow::Context;
 
-use std::iter::repeat;
-
-use crate::core::{Direction, Location};
+use crate::core::Direction;
 
 use super::{Parsed1, Parsed2};
 
@@ -17,19 +15,13 @@ pub fn solve1(contraption: &Parsed1) -> anyhow::Result<Solution1> {
 }
 
 pub fn solve2(contraption: &Parsed2) -> anyhow::Result<Solution2> {
-    let (height, width) = contraption.size();
-
-    let edges: [(Direction, Box<dyn Iterator<Item = Location>>); 4] = [
-        (North, Box::from(repeat(0).zip(0..width))),
-        (East, Box::from((0..height).zip(repeat(width - 1)))),
-        (South, Box::from(repeat(height - 1).zip(0..width))),
-        (West, Box::from((0..height).zip(repeat(0)))),
-    ];
-
-    edges
+    contraption
+        .edge_locations()
         .into_iter()
         .flat_map(|(enter_from, locations)| {
-            locations.map(move |start| contraption.count_energized(start, enter_from))
+            locations
+                .into_iter()
+                .map(move |start| contraption.count_energized(start, enter_from))
         })
         .max()
         .context("no solution")
