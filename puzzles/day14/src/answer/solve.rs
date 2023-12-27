@@ -1,6 +1,10 @@
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::{
+    hash_map::{DefaultHasher, Entry},
+    HashMap,
+};
+use std::hash::{Hash, Hasher};
 
-use crate::core::{Direction, Platform};
+use crate::core::Direction;
 
 use super::{Parsed1, Parsed2};
 
@@ -10,6 +14,12 @@ pub type Solution2 = Solution;
 
 pub fn solve1(platform: &Parsed1) -> anyhow::Result<Solution1> {
     Ok(platform.tilt(&Direction::North).total_load())
+}
+
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
 }
 
 pub fn solve2(platform: &Parsed2) -> anyhow::Result<Solution2> {
@@ -22,37 +32,34 @@ pub fn solve2(platform: &Parsed2) -> anyhow::Result<Solution2> {
 
     let num_cycles = 1_000_000_000;
     let num_iterations = num_cycles * directions_ccw.len();
-    let mut transitions = directions_ccw.into_iter().cycle().peekable();
+    let mut directions = directions_ccw.into_iter().cycle().peekable();
 
-    let mut current = platform.clone();
-    let mut cache: HashMap<(Platform, Direction), (usize, Platform)> = HashMap::new();
+    let mut current = calculate_hash(platform);
+    let mut platforms = HashMap::from([(current, platform.clone())]);
+    let mut graph: HashMap<(u64, Direction), (usize, u64)> = HashMap::new();
 
-    let (start, end) = (0..num_iterations)
+    let (loop_start, loop_end) = (0..num_iterations)
         .find_map(
-            |end| match cache.entry((current.clone(), *transitions.peek().unwrap())) {
-                Entry::Occupied(entry) => {
-                    let start = entry.get().0;
-                    Some((start, end))
-                }
+            |i| match graph.entry((current, *directions.peek().unwrap())) {
+                Entry::Occupied(entry) => Some((entry.get().0, i)),
                 Entry::Vacant(entry) => {
-                    let next = current.tilt(&transitions.next().unwrap());
-                    entry.insert((end, next.clone()));
-                    current = next;
+                    let platform = platforms[&current].tilt(&directions.next().unwrap());
+                    current = calculate_hash(&platform);
+                    platforms.insert(current, platform);
+                    entry.insert((i, current));
                     None
                 }
             },
         )
-        .unwrap_or((0, num_iterations));
+        .unwrap();
 
-    let loop_size = end - start;
-    let remaining_iterations = (num_iterations - start) % loop_size;
+    let remaining_iterations = (num_iterations - loop_start) % (loop_end - loop_start);
 
     for _ in 0..remaining_iterations {
-        let direction = transitions.next().unwrap();
-        current = cache.get(&(current, direction)).unwrap().1.clone();
+        current = graph.get(&(current, directions.next().unwrap())).unwrap().1;
     }
 
-    Ok(current.total_load())
+    Ok(platforms[&current].total_load())
 }
 
 #[cfg(test)]
