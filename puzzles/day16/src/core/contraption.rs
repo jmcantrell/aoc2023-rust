@@ -9,7 +9,7 @@ use Direction::*;
 
 type Inner = nalgebra::DMatrix<Tile>;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct Contraption(Inner);
 
 fn step((row, column): Location, (vertical, horizontal): Offset) -> Option<Location> {
