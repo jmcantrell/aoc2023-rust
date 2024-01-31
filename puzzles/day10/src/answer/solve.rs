@@ -48,14 +48,14 @@ mod tests {
 
     use super::*;
 
-    const INPUT1A: Input = include_str!("../../input-test1a.txt");
-    const INPUT1B: Input = include_str!("../../input-test1b.txt");
-    const INPUT2A: Input = include_str!("../../input-test2a.txt");
-    const INPUT2B: Input = include_str!("../../input-test2b.txt");
-    const INPUT3: Input = include_str!("../../input-test3.txt");
-    const INPUT4: Input = include_str!("../../input-test4.txt");
-    const INPUT5: Input = include_str!("../../input-test5.txt");
-    const INPUT6: Input = include_str!("../../input-test6.txt");
+    const INPUT1A: Input = include_str!("../../input-test1a");
+    const INPUT1B: Input = include_str!("../../input-test1b");
+    const INPUT2A: Input = include_str!("../../input-test2a");
+    const INPUT2B: Input = include_str!("../../input-test2b");
+    const INPUT3: Input = include_str!("../../input-test3");
+    const INPUT4: Input = include_str!("../../input-test4");
+    const INPUT5: Input = include_str!("../../input-test5");
+    const INPUT6: Input = include_str!("../../input-test6");
 
     #[test]
     fn test_solve1() -> anyhow::Result<()> {

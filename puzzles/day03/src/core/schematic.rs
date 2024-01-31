@@ -161,7 +161,7 @@ impl TryFrom<&str> for Schematic {
 mod tests {
     use super::*;
 
-    const INPUT: &str = include_str!("../../input-test.txt");
+    const INPUT: &str = include_str!("../../input-test");
 
     #[test]
     fn test_part_numbers() {
