@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+"""Plot a stack of sand bricks as voxels."""
+
+import sys
+from itertools import cycle
+from functools import reduce
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import numpy as np
+
+
+def parse_point(s):
+    return tuple(map(int, s.split(",")))
+
+
+def parse_brick(s):
+    return tuple(map(parse_point, s.split("~")))
+
+
+input_file = sys.argv[1]
+
+bricks = list(map(parse_brick, open(input_file)))
+
+max_coords = tuple(max(max(s[i], e[i]) + 1 for s, e in bricks) for i in range(3))
+
+x, y, z = coords = np.indices(max_coords)
+
+voxels = [
+    (x >= xs) & (x <= xe) & (y >= ys) & (y <= ye) & (z >= zs) & (z <= ze)
+    for (xs, ys, zs), (xe, ye, ze) in bricks
+]
+
+voxelarray = reduce(np.logical_or, voxels)
+
+facecolors = np.empty(voxelarray.shape, dtype=object)
+for voxel, color in zip(voxels, cycle(mcolors.XKCD_COLORS.values())):
+    facecolors[voxel] = color + "C0"
+
+ax = plt.figure().add_subplot(projection="3d")
+ax.voxels(voxelarray, facecolors=facecolors, edgecolor="k")
+
+ax.set_xlabel("x")
+ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+ax.set_ylabel("y")
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+ax.set_zlabel("z")
+ax.zaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+ax.set_aspect("equal")
+
+plt.show()
